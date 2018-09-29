@@ -12,6 +12,7 @@ class Block2048 implements KeyListener{
 	private Block2048() {
 		// Initialize Board
 		gameBoard = new Integer[4][4];
+		newGame = true;
 		generateBlock();
 		
 	}
@@ -20,12 +21,27 @@ class Block2048 implements KeyListener{
 		
 		if (newGame) {
 			// Generate 2 blocks
-			if (gameBoard[randomPos()][randomPos()] == 0) {
-				
+			while (true) {
+				int a = randomPos();
+				int b = randomPos();
+				if (gameBoard[a][b] == 0) {
+					gameBoard[a][b] = setNumber();
+					break;
+				}
 			}
+			newGame = false;
 		} else {
 			// Generate 1 block
 			
+		}
+	}
+	
+	private int setNumber() {
+		double choose = Math.random();
+		if (choose > 0.2) {
+			return 2;
+		} else {
+			return 4;
 		}
 	}
 	
