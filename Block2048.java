@@ -5,13 +5,13 @@ import javax.swing.*;
 
 class Block2048 implements KeyListener{
 	
-	private Integer[][] gameBoard; 
+	private int[][] gameBoard; 
 	private boolean newGame;
 	
 	
-	private Block2048() {
+	public Block2048() {
 		// Initialize Board
-		gameBoard = new Integer[4][4];
+		gameBoard = new int[4][4];
 		newGame = true;
 		generateBlock();
 		
@@ -34,7 +34,7 @@ class Block2048 implements KeyListener{
 			newGame = false;
 		} else {
 			// Generate 1 block
-			while (true) {		// while loop 1 time to generate 1 block
+			while (true) {				// while loop 1 time to generate 1 block
 				int a = randomPos();
 				int b = randomPos();
 				if (gameBoard[a][b] == 0) {
@@ -110,7 +110,7 @@ class Block2048 implements KeyListener{
 	
 	// Lab 3 code
 
-	public static void runningSum2DArray(int[][] array, int drct) {	
+	public void runningSum2DArray(int[][] array, int drct) {	
 		
 		// switch for 4 directions
 		switch(drct) {
@@ -121,7 +121,7 @@ class Block2048 implements KeyListener{
 					array[i][j] += array[i][j - 1];
 				}
 			}
-			print2Darray(array);
+			printGameBoard();
 			break;
 			
 		case 2: 		// Right to left
@@ -130,7 +130,7 @@ class Block2048 implements KeyListener{
 					array[i][j - 1] += array[i][j];
 				}
 			}
-			print2Darray(array);
+			printGameBoard();
 			break;
 		case 3: 		// Up to down
 			
@@ -140,7 +140,7 @@ class Block2048 implements KeyListener{
 					array[i][j] += array[i - 1][j];
 				}
 			}
-			print2Darray(array);
+			printGameBoard();
 			break;
 			
 		case 4: 		// Down to up
@@ -149,7 +149,7 @@ class Block2048 implements KeyListener{
 					array[i -1][j] += array[i][j];
 				}
 			}
-			print2Darray(array);
+			printGameBoard();
 			break;
 			
 		default:
@@ -158,8 +158,9 @@ class Block2048 implements KeyListener{
 		}
 	}
 	
-	public static void print2Darray(int[][] array) {
-	
+	public void printGameBoard() {
+		int[][] array = new int[4][4];
+		gameBoard = array;
 		for (int i = 0; i < array.length; i++) {
 		
 			for (int j = 0; j < array[i].length; j++) {
