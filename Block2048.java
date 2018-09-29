@@ -21,6 +21,19 @@ class Block2048 implements KeyListener{
 		
 		if (newGame) {
 			// Generate 2 blocks
+			for (int i = 0; i < 2; i++) {		// while loop 2 times to generate block
+				while (true) {
+					int a = randomPos();
+					int b = randomPos();
+					if (gameBoard[a][b] == 0) {
+						gameBoard[a][b] = setNumber();
+						break;
+					}
+				}
+			}
+			newGame = false;
+		} else {
+			// Generate 1 block
 			while (true) {
 				int a = randomPos();
 				int b = randomPos();
@@ -29,10 +42,6 @@ class Block2048 implements KeyListener{
 					break;
 				}
 			}
-			newGame = false;
-		} else {
-			// Generate 1 block
-			
 		}
 	}
 	
