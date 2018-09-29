@@ -34,7 +34,7 @@ class Block2048 implements KeyListener{
 			newGame = false;
 		} else {
 			// Generate 1 block
-			while (true) {
+			while (true) {		// while loop 1 time to generate 1 block
 				int a = randomPos();
 				int b = randomPos();
 				if (gameBoard[a][b] == 0) {
