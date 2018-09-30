@@ -3,17 +3,22 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-class Block2048 implements KeyListener{
+
+class Block2048 extends JComponent implements KeyListener{
 	
 	private int[][] gameBoard; 
 	private boolean newGame;
 	
-	
 	public Block2048() {
 		// Initialize Board
+		super();
+		this.addKeyListener(this);
+		this.setFocusable(true);
+		
 		gameBoard = new int[4][4];
 		newGame = true;
 		generateBlock();
+		this.printGameBoard();
 		
 	}
 	
@@ -25,6 +30,7 @@ class Block2048 implements KeyListener{
 				while (true) {
 					int a = randomPos();
 					int b = randomPos();
+					
 					if (gameBoard[a][b] == 0) {
 						gameBoard[a][b] = setNumber();
 						break;
@@ -60,6 +66,34 @@ class Block2048 implements KeyListener{
 	}
 	
 	private void moveBlockUp() {
+		// Skip the first row
+		int moved = 0; 		// If is 0, no move occurs
+		for (int row = 1; row < 4; row++) {
+			for (int column = 0; column < 4; column++) {
+				
+				int prev = gameBoard[row - 1][column];
+				if (prev != 0 && prev != gameBoard[row][column]) {
+					continue; 		// Go check the next element. This one is in its final position.
+					
+				} else if (prev == 0) {			// Step 1
+					gameBoard[row - 1][column] = gameBoard[row][column];
+					gameBoard[row][column] = 0;
+					moved++;
+					
+				} else if (prev == gameBoard[row][column]) {		// Step 2
+					gameBoard[row - 1][column] *= 2;
+					gameBoard[row][column] = 0;
+					moved++;
+				}
+			}
+		}
+		
+		// If moved = 0, means no move made. 
+		if (moved > 0) {
+			generateBlock();
+		} else {
+			// No move made, try again
+		}
 		
 	}
 	private void moveBlockLeft() {
@@ -73,15 +107,24 @@ class Block2048 implements KeyListener{
 	}
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
+	public void keyPressed(KeyEvent e) {
+		System.out.println("Key Pressed");
 		if (e.getKeyCode() == KeyEvent.VK_W) {
 			moveBlockUp();
+			this.printGameBoard();
+			
 		} else if (e.getKeyCode() == KeyEvent.VK_A) {
 			moveBlockLeft();
+			this.printGameBoard();
+			
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
 			moveBlockDown();
+			this.printGameBoard();
+			
 		} else if (e.getKeyCode() == KeyEvent.VK_D) {
 			moveBlockRight();
+			this.printGameBoard();
+			
 		} else if (e.getKeyCode() == KeyEvent.VK_Q) {
 			// Quit
 		} else if (e.getKeyCode() == KeyEvent.VK_R) {
@@ -91,7 +134,7 @@ class Block2048 implements KeyListener{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -159,25 +202,25 @@ class Block2048 implements KeyListener{
 	}
 	
 	public void printGameBoard() {
-		int[][] array = new int[4][4];
-		gameBoard = array;
-		for (int i = 0; i < array.length; i++) {
+		System.out.println("\n\n\n");
+		for (int i = 0; i < this.gameBoard.length; i++) {
 		
-			for (int j = 0; j < array[i].length; j++) {
+			for (int j = 0; j < this.gameBoard[i].length; j++) {
 			
 				//Make sure the same spacing for different lengths of numbers
-				if (array[i][j] < 10) {
-					System.out.print(array[i][j] + "    ");
-				} else if (array[i][j] <100) {
-					System.out.print(array[i][j] + "   ");
-				} else if (array[i][j] <1000) {
-					System.out.print(array[i][j] + "  ");
-				} else if (array[i][j] <1000) {
-					System.out.print(array[i][j] + " ");
+				if (this.gameBoard[i][j] < 10) {
+					System.out.print(this.gameBoard[i][j] + "    ");
+				} else if (this.gameBoard[i][j] <100) {
+					System.out.print(this.gameBoard[i][j] + "   ");
+				} else if (this.gameBoard[i][j] <1000) {
+					System.out.print(this.gameBoard[i][j] + "  ");
+				} else if (this.gameBoard[i][j] <1000) {
+					System.out.print(this.gameBoard[i][j] + " ");
 				}
 			}
 		
 			// Change line for new row
+			System.out.println();
 			System.out.println();
 		}
 	}
