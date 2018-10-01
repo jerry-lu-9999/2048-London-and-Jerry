@@ -8,6 +8,7 @@ class Block2048 extends JComponent implements KeyListener{
 	
 	private int[][] gameBoard; 
 	private boolean newGame;
+	private int moved = 0;
 	
 	public Block2048() {
 		// Initialize Board
@@ -65,31 +66,66 @@ class Block2048 extends JComponent implements KeyListener{
 		return rand;
 	}
 	
+	private void moveUp(int row, int column) {		// Move across all zero blocks
+		
+		// Base case
+		if (row == 0) {
+			return;
+		} 
+		// Base case
+		else if (gameBoard[row - 1][column] != 0) {
+			return;
+		} 
+		// Recursion: Prev == 0
+		else {
+			// We include situations moving 0
+			if (gameBoard[row][column] != 0) {
+				this.moved++;
+			}
+			System.out.println(this.moved);
+			gameBoard[row - 1][column] = gameBoard[row][column]; 
+			gameBoard[row][column] = 0;
+			
+			moveUp(row - 1, column);
+		}
+		return;
+		
+		// Need to reset moved for new move
+	}
+	
+	private void sumBlockUp(int row, int column) {
+		
+		// No recursion
+		if (gameBoard[row - 1][column] != gameBoard[row][column]) {
+			return;
+		} else {
+			
+			if (gameBoard[row][column] != 0) {
+				System.out.println("Summed");
+				this.moved++;
+			}
+			gameBoard[row - 1][column] *= 2;
+			gameBoard[row][column] = 0;
+			
+			
+		}
+		return;
+	}
+	
 	private void moveBlockUp() {
 		// Skip the first row
-		int moved = 0; 		// If is 0, no move occurs
 		for (int row = 1; row < 4; row++) {
 			for (int column = 0; column < 4; column++) {
 				
-				int prev = gameBoard[row - 1][column];
-				if (prev != 0 && prev != gameBoard[row][column]) {
-					continue; 		// Go check the next element. This one is in its final position.
-					
-				} else if (prev == 0) {			// Step 1
-					gameBoard[row - 1][column] = gameBoard[row][column];
-					gameBoard[row][column] = 0;
-					moved++;
-					
-				} else if (prev == gameBoard[row][column]) {		// Step 2
-					gameBoard[row - 1][column] *= 2;
-					gameBoard[row][column] = 0;
-					moved++;
-				}
+				moveUp(row, column);
+				sumBlockUp(row, column);
+				//moveUp(row, column);
+				
 			}
 		}
 		
 		// If moved = 0, means no move made. 
-		if (moved > 0) {
+		if (this.moved > 0) {
 			generateBlock();
 		} else {
 			// No move made, try again
@@ -227,3 +263,4 @@ class Block2048 extends JComponent implements KeyListener{
 }
 
 	
+ 
