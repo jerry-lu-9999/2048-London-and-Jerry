@@ -6,7 +6,7 @@ import javax.swing.*;
 
 class Block2048 extends JComponent implements KeyListener{
 	
-	private int[][] gameBoard; 
+	protected int[][] gameBoard; 
 	private boolean newGame;
 	private int moved = 0;
 	
@@ -82,7 +82,7 @@ class Block2048 extends JComponent implements KeyListener{
 			if (gameBoard[row][column] != 0) {
 				this.moved++;
 			}
-			System.out.println(this.moved);
+			
 			gameBoard[row - 1][column] = gameBoard[row][column]; 
 			gameBoard[row][column] = 0;
 			
@@ -95,17 +95,16 @@ class Block2048 extends JComponent implements KeyListener{
 	
 	private void sumBlockUp(int row, int column) {
 		
-		// No recursion
-		if (gameBoard[row - 1][column] != gameBoard[row][column]) {
+		if (this.gameBoard[row - 1][column] != this.gameBoard[row][column]) {
 			return;
 		} else {
 			
-			if (gameBoard[row][column] != 0) {
-				System.out.println("Summed");
+			if (this.gameBoard[row][column] != 0) {
+				System.out.print("Summed");
 				this.moved++;
 			}
-			gameBoard[row - 1][column] *= 2;
-			gameBoard[row][column] = 0;
+			this.gameBoard[row - 1][column] *= 2;
+			this.gameBoard[row][column] = 0;
 			
 			
 		}
@@ -114,18 +113,30 @@ class Block2048 extends JComponent implements KeyListener{
 	
 	private void moveBlockUp() {
 		// Skip the first row
+		
 		for (int row = 1; row < 4; row++) {
 			for (int column = 0; column < 4; column++) {
-				
+				// Elements are only successfully moved up 
+				// when this for loop is finished
+				// Therefore, the loop is repeated triply. 
 				moveUp(row, column);
+			}
+		}
+		
+		for (int row = 1; row < 4; row++) {
+			for (int column = 0; column < 4; column++) {
 				sumBlockUp(row, column);
-				//moveUp(row, column);
-				
+			}
+		}
+		
+		for (int row = 1; row < 4; row++) {
+			for (int column = 0; column < 4; column++) {
+				moveUp(row, column);
 			}
 		}
 		
 		// If moved = 0, means no move made. 
-		if (this.moved > 0) {
+		if (/*this.moved > 0*/ true) {
 			generateBlock();
 		} else {
 			// No move made, try again
