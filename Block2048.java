@@ -68,11 +68,11 @@ class Block2048 extends JComponent implements KeyListener{
 	
 	private void moveUp(int row, int column) {		// Move across all zero blocks
 		
-		// Base case
+		// Base case 1
 		if (row == 0) {
 			return;
 		} 
-		// Base case
+		// Base case 2
 		else if (gameBoard[row - 1][column] != 0) {
 			return;
 		} 
@@ -93,6 +93,87 @@ class Block2048 extends JComponent implements KeyListener{
 		// Need to reset moved for new move
 	}
 	
+	private void moveLeft(int row, int column) {		// Move across all zero blocks
+		
+		// Base case 1
+		if (column == 0) {
+			return;
+		} 
+		// Base case 2
+		else if (gameBoard[row][column - 1] != 0) {
+			return;
+		} 
+		// Recursion: Prev == 0
+		else {
+			// We include situations moving 0
+			if (gameBoard[row][column] != 0) {
+				this.moved++;
+			}
+			
+			gameBoard[row][column - 1] = gameBoard[row][column]; 
+			gameBoard[row][column] = 0;
+			
+			moveLeft(row, column - 1);
+		}
+		return;
+		
+		// Need to reset moved for new move
+	}
+	
+	private void moveDown(int row, int column) {		// Move across all zero blocks
+		
+		// Base case
+		if (row == 3) {
+			return;
+		} 
+		// Base case
+		else if (gameBoard[row + 1][column] != 0) {
+			return;
+		} 
+		// Recursion: Prev == 0
+		else {
+			// We include situations moving 0
+			if (gameBoard[row][column] != 0) {
+				this.moved++;
+			}
+			
+			gameBoard[row + 1][column] = gameBoard[row][column]; 
+			gameBoard[row][column] = 0;
+			
+			moveDown(row + 1, column);
+		}
+		return;
+		
+		// Need to reset moved for new move
+	}
+	
+	private void moveRight(int row, int column) {		// Move across all zero blocks
+		
+		// Base case
+		if (column == 3) {
+			return;
+		} 
+		// Base case
+		else if (gameBoard[row][column + 1] != 0) {
+			return;
+		} 
+		// Recursion: Prev == 0
+		else {
+			// We include situations moving 0
+			if (gameBoard[row][column] != 0) {
+				this.moved++;
+			}
+			
+			gameBoard[row][column + 1] = gameBoard[row][column]; 
+			gameBoard[row][column] = 0;
+			
+			moveRight(row, column + 1);
+		}
+		return;
+		
+		// Need to reset moved for new move
+	}
+	
 	private void sumBlockUp(int row, int column) {
 		
 		if (this.gameBoard[row - 1][column] != this.gameBoard[row][column]) {
@@ -104,6 +185,60 @@ class Block2048 extends JComponent implements KeyListener{
 				this.moved++;
 			}
 			this.gameBoard[row - 1][column] *= 2;
+			this.gameBoard[row][column] = 0;
+			
+			
+		}
+		return;
+	}
+	
+	private void sumBlockLeft(int row, int column) {
+		
+		if (this.gameBoard[row][column - 1] != this.gameBoard[row][column]) {
+			return;
+		} else {
+			
+			if (this.gameBoard[row][column] != 0) {
+				System.out.print("Summed");
+				this.moved++;
+			}
+			this.gameBoard[row][column - 1] *= 2;
+			this.gameBoard[row][column] = 0;
+			
+			
+		}
+		return;
+	}
+	
+	private void sumBlockDown(int row, int column) {
+		
+		if (this.gameBoard[row + 1][column] != this.gameBoard[row][column]) {
+			return;
+		} else {
+			
+			if (this.gameBoard[row][column] != 0) {
+				System.out.print("Summed");
+				this.moved++;
+			}
+			this.gameBoard[row + 1][column] *= 2;
+			this.gameBoard[row][column] = 0;
+			
+			
+		}
+		return;
+	}
+	
+	private void sumBlockRight(int row, int column) {
+		
+		if (this.gameBoard[row][column + 1] != this.gameBoard[row][column]) {
+			return;
+		} else {
+			
+			if (this.gameBoard[row][column] != 0) {
+				System.out.print("Summed");
+				this.moved++;
+			}
+			this.gameBoard[row][column + 1] *= 2;
 			this.gameBoard[row][column] = 0;
 			
 			
@@ -143,13 +278,92 @@ class Block2048 extends JComponent implements KeyListener{
 		}
 		
 	}
+	
 	private void moveBlockLeft() {
+		// Skip the first row
+		
+		for (int row = 0; row < 4; row++) {
+			for (int column = 1; column < 4; column++) { 
+				moveLeft(row, column);
+			}
+		}
+		
+		for (int row = 0; row < 4; row++) {
+			for (int column = 1; column < 4; column++) {
+				sumBlockLeft(row, column);
+			}
+		}
+		
+		for (int row = 0; row < 4; row++) {
+			for (int column = 1; column < 4; column++) {
+				moveLeft(row, column);
+			}
+		}
+		
+		// If moved = 0, means no move made. 
+		if (/*this.moved > 0*/ true) {
+			generateBlock();
+		} else {
+			// No move made, try again
+		}
 		
 	}
 	private void moveBlockDown() {
+		// Skip the first row
+		
+		for (int row = 2; row >= 0; row--) { 		// Skip row 3 (4th row)
+			for (int column = 0; column < 4; column++) { 
+				moveDown(row, column);
+			}
+		}
+		
+		for (int row = 2; row >= 0; row--) {
+			for (int column = 0; column < 4; column++) {
+				sumBlockDown(row, column);
+			}
+		}
+		
+		for (int row = 2; row >= 0; row--) {
+			for (int column = 0; column < 4; column++) {
+				moveDown(row, column);
+			}
+		}
+		
+		// If moved = 0, means no move made. 
+		if (/*this.moved > 0*/ true) {
+			generateBlock();
+		} else {
+			// No move made, try again
+		}
 		
 	}
 	private void moveBlockRight() {
+		// Skip the first row
+		
+		for (int row = 0; row < 4; row++) {
+			for (int column = 2; column >= 0; column--) {		//Skip column 3 (no 4) 
+				moveRight(row, column);
+			}
+		}
+		
+		for (int row = 0; row < 4; row++) {
+			for (int column = 2; column >= 0; column--) {
+				sumBlockRight(row, column);
+			}
+		}
+		
+		for (int row = 0; row < 4; row++) {
+			for (int column = 2; column >= 0; column--) {
+				moveRight(row, column);
+			}
+		}
+		
+		// If moved = 0, means no move made. 
+		if (/*this.moved > 0*/ true) {
+			generateBlock();
+		} else {
+			// No move made, try again
+		}
 		
 	}
 	
