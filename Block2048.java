@@ -8,7 +8,10 @@ class Block2048 extends JComponent implements KeyListener{
 	
 	protected int[][] gameBoard; 
 	private boolean newGame;
+	private boolean firstMove;
+	private int score = 0;
 	private int moved = 0;
+	private int moveMade = 0;
 	
 	public Block2048() {
 		// Initialize Board
@@ -77,10 +80,14 @@ class Block2048 extends JComponent implements KeyListener{
 			return;
 		} 
 		// Recursion: Prev == 0
-		else {
-			// We include situations moving 0
-			if (gameBoard[row][column] != 0) {
+		else if (gameBoard[row][column] != 0) {
+			// If the block is not zero, it means that it will make a valid move 
+			// In this else 
+			
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
 			
 			gameBoard[row - 1][column] = gameBoard[row][column]; 
@@ -104,10 +111,12 @@ class Block2048 extends JComponent implements KeyListener{
 			return;
 		} 
 		// Recursion: Prev == 0
-		else {
-			// We include situations moving 0
-			if (gameBoard[row][column] != 0) {
+		else if (gameBoard[row][column] != 0) {
+			
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
 			
 			gameBoard[row][column - 1] = gameBoard[row][column]; 
@@ -124,17 +133,19 @@ class Block2048 extends JComponent implements KeyListener{
 		
 		// Base case
 		if (row == 3) {
-			return;
+			return;		// The method ends here.
 		} 
 		// Base case
 		else if (gameBoard[row + 1][column] != 0) {
 			return;
 		} 
 		// Recursion: Prev == 0
-		else {
-			// We include situations moving 0
-			if (gameBoard[row][column] != 0) {
+		else if (gameBoard[row][column] != 0) {
+			
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
 			
 			gameBoard[row + 1][column] = gameBoard[row][column]; 
@@ -158,10 +169,12 @@ class Block2048 extends JComponent implements KeyListener{
 			return;
 		} 
 		// Recursion: Prev == 0
-		else {
-			// We include situations moving 0
-			if (gameBoard[row][column] != 0) {
+		else if (gameBoard[row][column] != 0) {
+			
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
 			
 			gameBoard[row][column + 1] = gameBoard[row][column]; 
@@ -178,12 +191,16 @@ class Block2048 extends JComponent implements KeyListener{
 		
 		if (this.gameBoard[row - 1][column] != this.gameBoard[row][column]) {
 			return;
-		} else {
+		} else if (this.gameBoard[row][column] != 0) {
 			
-			if (this.gameBoard[row][column] != 0) {
-				System.out.print("Summed");
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
+			
+			this.score += this.gameBoard[row][column] * 2;
+			
 			this.gameBoard[row - 1][column] *= 2;
 			this.gameBoard[row][column] = 0;
 			
@@ -196,12 +213,16 @@ class Block2048 extends JComponent implements KeyListener{
 		
 		if (this.gameBoard[row][column - 1] != this.gameBoard[row][column]) {
 			return;
-		} else {
+		} else if (this.gameBoard[row][column] != 0) {
 			
-			if (this.gameBoard[row][column] != 0) {
-				System.out.print("Summed");
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
+			
+			this.score += this.gameBoard[row][column] * 2;
+			
 			this.gameBoard[row][column - 1] *= 2;
 			this.gameBoard[row][column] = 0;
 			
@@ -214,12 +235,16 @@ class Block2048 extends JComponent implements KeyListener{
 		
 		if (this.gameBoard[row + 1][column] != this.gameBoard[row][column]) {
 			return;
-		} else {
+		} else if(this.gameBoard[row][column] != 0) {
 			
-			if (this.gameBoard[row][column] != 0) {
-				System.out.print("Summed");
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
+			
+			this.score += this.gameBoard[row][column] * 2;
+			
 			this.gameBoard[row + 1][column] *= 2;
 			this.gameBoard[row][column] = 0;
 			
@@ -232,15 +257,17 @@ class Block2048 extends JComponent implements KeyListener{
 		
 		if (this.gameBoard[row][column + 1] != this.gameBoard[row][column]) {
 			return;
-		} else {
+		} else if (this.gameBoard[row][column] != 0) {
 			
-			if (this.gameBoard[row][column] != 0) {
-				System.out.print("Summed");
+			if (firstMove) {
 				this.moved++;
+				this.moveMade++;
+				firstMove = false;
 			}
+			
+			this.score += this.gameBoard[row][column] * 2;
 			this.gameBoard[row][column + 1] *= 2;
 			this.gameBoard[row][column] = 0;
-			
 			
 		}
 		return;
@@ -248,10 +275,12 @@ class Block2048 extends JComponent implements KeyListener{
 	
 	private void moveBlockUp() {
 		// Skip the first row
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+		firstMove = true;
 		
 		for (int row = 1; row < 4; row++) {
 			for (int column = 0; column < 4; column++) {
-				// Elements are only successfully moved up 
+				// Elements are only all successfully moved up 
 				// when this for loop is finished
 				// Therefore, the loop is repeated triply. 
 				moveUp(row, column);
@@ -271,16 +300,22 @@ class Block2048 extends JComponent implements KeyListener{
 		}
 		
 		// If moved = 0, means no move made. 
-		if (/*this.moved > 0*/ true) {
+		if (this.moved > 0) {
 			generateBlock();
+			this.moved = 0;
+			System.out.println("It's a valid move. " + "Valid move made: " + moveMade);
 		} else {
-			// No move made, try again
+			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
+		
+		System.out.println("Your current score is " + this.score);
 		
 	}
 	
 	private void moveBlockLeft() {
 		// Skip the first row
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+		firstMove = true;
 		
 		for (int row = 0; row < 4; row++) {
 			for (int column = 1; column < 4; column++) { 
@@ -301,15 +336,22 @@ class Block2048 extends JComponent implements KeyListener{
 		}
 		
 		// If moved = 0, means no move made. 
-		if (/*this.moved > 0*/ true) {
+		if (this.moved > 0) {
 			generateBlock();
+			this.moved = 0;
+			System.out.println("It's a valid move. " + "Valid move made: " + moveMade);
 		} else {
-			// No move made, try again
+			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
 		
+		System.out.println("Your current score is " + this.score);
+		
 	}
+	
 	private void moveBlockDown() {
 		// Skip the first row
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+		firstMove = true;
 		
 		for (int row = 2; row >= 0; row--) { 		// Skip row 3 (4th row)
 			for (int column = 0; column < 4; column++) { 
@@ -330,15 +372,23 @@ class Block2048 extends JComponent implements KeyListener{
 		}
 		
 		// If moved = 0, means no move made. 
-		if (/*this.moved > 0*/ true) {
+		if (this.moved > 0) {
 			generateBlock();
+			this.moved = 0;
+			System.out.println("It's a valid move. " + "Valid move made: " + moveMade);
 		} else {
-			// No move made, try again
+			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
 		
+		System.out.println("Your current score is " + this.score);
+		
+		
 	}
+	
 	private void moveBlockRight() {
 		// Skip the first row
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+		firstMove = true;
 		
 		for (int row = 0; row < 4; row++) {
 			for (int column = 2; column >= 0; column--) {		//Skip column 3 (no 4) 
@@ -359,31 +409,98 @@ class Block2048 extends JComponent implements KeyListener{
 		}
 		
 		// If moved = 0, means no move made. 
-		if (/*this.moved > 0*/ true) {
+		if (this.moved > 0) {
 			generateBlock();
+			this.moved = 0;
+			System.out.println("It's a valid move. " + "Valid move made: " + moveMade);
 		} else {
-			// No move made, try again
+			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
+		
+		System.out.println("Your current score is " + this.score);
 		
 	}
 	
+	public boolean checkWin() {
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (gameBoard[i][j] == 2048) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkLose() {
+		
+		boolean noZero = true;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (gameBoard[i][j] == 0) {
+					return false;
+				}
+			}
+		}
+		
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (gameBoard[i][j] == gameBoard[i+1][j]) {
+					return false;
+				}
+			}
+		}
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (gameBoard[i][j] == gameBoard[i][j+1]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+		
+	}
+	
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println("Key Pressed");
 		if (e.getKeyCode() == KeyEvent.VK_W) {
 			moveBlockUp();
+			if (this.checkWin()) {
+				System.out.println("You win.");
+			} else if (this.checkLose()) {
+				System.out.println("No possible moves can be made. You lose.");
+			}
 			this.printGameBoard();
 			
 		} else if (e.getKeyCode() == KeyEvent.VK_A) {
 			moveBlockLeft();
+			if (this.checkWin()) {
+				System.out.println("You win.");
+			} else if (this.checkLose()) {
+				System.out.println("No possible moves can be made. You lose.");
+			}
 			this.printGameBoard();
 			
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
 			moveBlockDown();
+			if (this.checkWin()) {
+				System.out.println("You win.");
+			} else if (this.checkLose()) {
+				System.out.println("No possible moves can be made. You lose.");
+			}
 			this.printGameBoard();
 			
 		} else if (e.getKeyCode() == KeyEvent.VK_D) {
 			moveBlockRight();
+			if (this.checkWin()) {
+				System.out.println("You win.");
+			} else if (this.checkLose()) {
+				System.out.println("No possible moves can be made. You lose.");
+			}
 			this.printGameBoard();
 			
 		} else if (e.getKeyCode() == KeyEvent.VK_Q) {
@@ -463,7 +580,7 @@ class Block2048 extends JComponent implements KeyListener{
 	}
 	
 	public void printGameBoard() {
-		System.out.println("\n\n\n");
+		
 		for (int i = 0; i < this.gameBoard.length; i++) {
 		
 			for (int j = 0; j < this.gameBoard[i].length; j++) {
