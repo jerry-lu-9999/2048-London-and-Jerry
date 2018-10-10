@@ -9,6 +9,9 @@ class Block2048 extends JComponent implements KeyListener{
 	protected int[][] gameBoard; 
 	private boolean newGame;
 	private boolean firstMove;
+	private boolean endGame = false;
+	private int quitGame = 0;
+	private int resGame = 0;
 	private int score = 0;
 	private int moved = 0;
 	private int moveMade = 0;
@@ -21,7 +24,10 @@ class Block2048 extends JComponent implements KeyListener{
 		
 		gameBoard = new int[4][4];
 		newGame = true;
+		endGame = false; 
+		
 		generateBlock();
+		System.out.println("Hello, this is a simple 2048 game: \nPress w(up), a(left), s(down), d(right) to move the blocks");
 		this.printGameBoard();
 		
 	}
@@ -308,7 +314,7 @@ class Block2048 extends JComponent implements KeyListener{
 			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
 		
-		System.out.println("Your current score is " + this.score);
+		System.out.println("Your current score is " + this.score + ". Maximum number is " + findMax());
 		
 	}
 	
@@ -344,7 +350,7 @@ class Block2048 extends JComponent implements KeyListener{
 			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
 		
-		System.out.println("Your current score is " + this.score);
+		System.out.println("Your current score is " + this.score + ". Maximum number is " + findMax());
 		
 	}
 	
@@ -380,7 +386,7 @@ class Block2048 extends JComponent implements KeyListener{
 			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
 		
-		System.out.println("Your current score is " + this.score);
+		System.out.println("Your current score is " + this.score + ". Maximum number is " + findMax());
 		
 		
 	}
@@ -417,18 +423,14 @@ class Block2048 extends JComponent implements KeyListener{
 			System.out.println("Not a valid move. " + "Valid move made: " + moveMade);
 		}
 		
-		System.out.println("Your current score is " + this.score);
+		System.out.println("Your current score is " + this.score + ". Maximum number is " + findMax());
 		
 	}
 	
 	public boolean checkWin() {
 		
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (gameBoard[i][j] == 2048) {
-					return true;
-				}
-			}
+		if (findMax() == 2048) {
+			return true;
 		}
 		return false;
 	}
@@ -464,57 +466,108 @@ class Block2048 extends JComponent implements KeyListener{
 		
 	}
 	
+	public int findMax() {
+		
+		int temp = 0;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (gameBoard[i][j] > temp) {
+					temp = gameBoard[i][j];
+				}
+			}
+		}
+		return temp;
+	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_W) {
-			moveBlockUp();
-			if (this.checkWin()) {
-				System.out.println("You win.");
-			} else if (this.checkLose()) {
-				System.out.println("No possible moves can be made. You lose.");
+		
+		if (!endGame) {
+			if (e.getKeyCode() == KeyEvent.VK_W) {
+				moveBlockUp();
+				if (this.checkWin()) {
+					System.out.println("You win.");
+				} else if (this.checkLose()) {
+					System.out.println("No possible moves can be made. You lose.");
+				}
+				this.printGameBoard();
+				
+			} else if (e.getKeyCode() == KeyEvent.VK_A) {
+				moveBlockLeft();
+				if (this.checkWin()) {
+					System.out.println("You win.");
+				} else if (this.checkLose()) {
+					System.out.println("No possible moves can be made. You lose.");
+				}
+				this.printGameBoard();
+				
+			} else if (e.getKeyCode() == KeyEvent.VK_S) {
+				moveBlockDown();
+				if (this.checkWin()) {
+					System.out.println("You win.");
+				} else if (this.checkLose()) {
+					System.out.println("No possible moves can be made. You lose.");
+				}
+				this.printGameBoard();
+				
+			} else if (e.getKeyCode() == KeyEvent.VK_D) {
+				moveBlockRight();
+				if (this.checkWin()) {
+					System.out.println("You win.");
+				} else if (this.checkLose()) {
+					System.out.println("No possible moves can be made. You lose.");
+				}
+				this.printGameBoard();
 			}
-			this.printGameBoard();
-			
-		} else if (e.getKeyCode() == KeyEvent.VK_A) {
-			moveBlockLeft();
-			if (this.checkWin()) {
-				System.out.println("You win.");
-			} else if (this.checkLose()) {
-				System.out.println("No possible moves can be made. You lose.");
-			}
-			this.printGameBoard();
-			
-		} else if (e.getKeyCode() == KeyEvent.VK_S) {
-			moveBlockDown();
-			if (this.checkWin()) {
-				System.out.println("You win.");
-			} else if (this.checkLose()) {
-				System.out.println("No possible moves can be made. You lose.");
-			}
-			this.printGameBoard();
-			
-		} else if (e.getKeyCode() == KeyEvent.VK_D) {
-			moveBlockRight();
-			if (this.checkWin()) {
-				System.out.println("You win.");
-			} else if (this.checkLose()) {
-				System.out.println("No possible moves can be made. You lose.");
-			}
-			this.printGameBoard();
-			
-		} else if (e.getKeyCode() == KeyEvent.VK_Q) {
-			// Quit
-		} else if (e.getKeyCode() == KeyEvent.VK_R) {
-			// Restart
+			System.out.println("KeyPressed: " + e.getKeyChar());
 		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_Q) {
+			// Quit
+			this.quitGame++;
+			if (this.quitGame == 1) {
+				System.out.println("Do you want to quit the game? Press Q again to quit; press any other key to resume");
+			}
+			
+			if (quitGame == 2) {
+				endGame = true;
+				System.out.println("End Game");
+				this.quitGame = 0;
+			}
+			
+			
+		} else { 
+			
+			this.quitGame = 0;
+			
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_R) {
+			this.resGame++;
+			if (this.resGame == 1) {
+				System.out.println("Do you want to restart the game? Press R again to restart; press any other key to resume");
+			}
+			
+			if (resGame == 2 || e.getKeyCode() != KeyEvent.VK_R) {
+				gameBoard = new int[4][4];
+				score = 0;
+				moveMade = 0;
+				this.newGame = true;
+				generateBlock();
+				this.printGameBoard();
+				System.out.println("Restart game. Press w, a, s, or d to start.");
+				this.resGame = 0;
+			}
+		} else { 
+			this.resGame = 0;
+		}
+		
 		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
