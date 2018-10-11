@@ -1,3 +1,8 @@
+/*
+ * Group member: Jiahao Lu, Linzan Ye
+ * We did not copy code from anyone else.
+ */
+
 import javax.swing.*;
 
 public class Game {
@@ -5,9 +10,11 @@ public class Game {
 	static Block2048 canvas;
 	
 	public static void main(String[]args) {
-		JFrame frame = new JFrame();
-		canvas = new Block2048();
 		
+		JFrame frame = new JFrame();
+		canvas = new Block2048();		// Start game
+		
+		// Initialize the GUI + keylisteners
 		frame.add(canvas);
 		frame.setSize(150,1);
 		frame.setLocation(400,100);
